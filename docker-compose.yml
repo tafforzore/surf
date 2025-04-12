@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  hatunnel:
+    build: .
+    container_name: hatunnel
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8888:8888"
+    environment:
+      - SOCKS5_PROXY=your-socks5-server.com:1080
+      - PROXY_USER=username
+      - PROXY_PASS=password
+    volumes:
+      - ./logs:/var/log/haproxy
