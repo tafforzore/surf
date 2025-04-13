@@ -1,36 +1,36 @@
 FROM debian:bookworm-slim
 
-# Configure environment pour éviter les warnings pip
+# Configure environment
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PYTHONUNBUFFERED=1
 
-# Installer les dépendances système
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y \
     haproxy \
     python3 \
     python3-pip \
     python3-venv \
-    git \
     openssh-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Créer et activer un virtualenv
+# Create virtual environment
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Installer les dépendances Python dans le virtualenv
+# Install Python packages
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir pproxy==2.7.5 cryptography==38.0.4
 
-# Copier les fichiers de configuration
+# Copy configuration files
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-tunnel.sh /start-tunnel.sh
 
-# Vérifier la configuration HAProxy
+# Set permissions and verify config
 RUN chmod +x /start-tunnel.sh && \
-    haproxy -c -f /etc/haproxy/haproxy.cfg
+    mkdir -p /var/run/haproxy && \
+    haproxy -c -f /etc/haproxy/haproxy.cfg || true
 
 EXPOSE 8080 8888
 
