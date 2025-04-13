@@ -14,7 +14,7 @@ services:
     volumes:
       - ./logs:/var/log/haproxy
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      test: ["CMD-SHELL", "nc -z localhost 8080 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
