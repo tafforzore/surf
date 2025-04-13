@@ -1,18 +1,25 @@
 FROM alpine:3.18
 
-# Install dependencies with specific versions
+# Install dependencies with compatible versions
 RUN apk add --no-cache \
-    haproxy=2.6.21-r0 \
-    python3=3.10.12-r0 \
-    py3-pip=23.0.1-r0 \
-    openssh-client=9.3_p2-r0 \
+    haproxy \
+    python3 \
+    py3-pip \
+    openssh-client \
     && pip3 install --no-cache-dir pproxy==2.8.0
+
+# Verify installed versions
+RUN echo "Versions installed:" && \
+    haproxy -v && \
+    python3 --version && \
+    pip3 --version && \
+    ssh -V
 
 # Copy config files
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-tunnel.sh /start-tunnel.sh
 
-# Verify config file ends with newline
+# Ensure config file ends with newline
 RUN if [ -n "$(tail -c 1 /etc/haproxy/haproxy.cfg)" ]; then \
         echo >> /etc/haproxy/haproxy.cfg; \
     fi
