@@ -9,8 +9,8 @@ services:
       - "8080:8080"
       - "8888:8888"
     environment:
-      - SOCKS5_PROXY=your-socks5-server.com:1080
-      - PROXY_USER=username
-      - PROXY_PASS=password
+      - SOCKS5_PROXY=196.16.110.34:8000
+      - PROXY_USER=koTHWe
+      - PROXY_PASS=u0b8yD
     volumes:
       - ./logs:/var/log/haproxy
